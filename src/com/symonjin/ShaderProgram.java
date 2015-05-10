@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 public abstract class ShaderProgram {
     private int programID;
     private int vertexShaderID;
@@ -20,13 +19,16 @@ public abstract class ShaderProgram {
 
         GL20.glAttachShader(programID, vertexShaderID);
         GL20.glAttachShader(programID, fragmentShaderID);
-        bindAttr();
+
+        bindAttribute();
+
         GL20.glLinkProgram(programID);
         GL20.glValidateProgram(programID);
     }
 
-    protected abstract void bindAttr();
-    protected void bindAttr(int attribute, String name){
+    protected abstract void bindAttribute();
+
+    protected void bindAttribute(int attribute, String name){
         GL20.glBindAttribLocation(programID, attribute, name);
     }
 
@@ -40,18 +42,21 @@ public abstract class ShaderProgram {
 
     public void unloadShaders(){
         stop();
+
         GL20.glDetachShader(programID, vertexShaderID);
         GL20.glDetachShader(programID, fragmentShaderID);
+
         GL20.glDeleteShader(vertexShaderID);
         GL20.glDeleteShader(fragmentShaderID);
+
         GL20.glDeleteProgram(programID);
     }
 
-    private static int loadShader(String file, int type){
+    private static int loadShader(String filepath, int type){
         StringBuilder shaderSource = new StringBuilder();
 
         //Try with resource
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
 
             String line;
 
@@ -60,8 +65,9 @@ public abstract class ShaderProgram {
             }
 
         }catch (IOException error){
-            System.out.println("Failed to read shader file: "+ file);
+            System.out.println("Failed to read shader file: "+ filepath);
         }
+
 
 
         int shaderID = GL20.glCreateShader(type);

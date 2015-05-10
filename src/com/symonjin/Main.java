@@ -1,5 +1,8 @@
 package com.symonjin;
 
+import com.symonjin.models.Model;
+import com.symonjin.models.TexturedModel;
+import com.symonjin.texture.ModelTexture;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -93,11 +96,14 @@ public class Main {
         triangle = loader.loadToVAO(vertices, indices);
         triangleShader = new StaticShader();
 
+        ModelTexture texture = new ModelTexture(loader.loadTexture("gravel"));
+        TexturedModel tmodel = new TexturedModel(triangle, null);
+
         while ( glfwWindowShouldClose(windowID) == GL_FALSE ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             triangleShader.start();
-            renderer.render(triangle);
+            renderer.render(tmodel);
             triangleShader.stop();
 
             //Important things to have in the rendering loop

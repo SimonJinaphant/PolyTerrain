@@ -1,4 +1,4 @@
-package com.symonjin;
+package com.symonjin.models;
 
 public class Model {
     //Contains a model's meta data?

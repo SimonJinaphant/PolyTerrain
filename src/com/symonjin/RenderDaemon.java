@@ -1,5 +1,7 @@
 package com.symonjin;
 
+import com.symonjin.models.Model;
+import com.symonjin.models.TexturedModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -12,7 +14,8 @@ public class RenderDaemon {
         GL11.glClearColor(0,0,1,0);
     }
 
-    public void render(Model model) {
+    public void render(TexturedModel texturedmodel) {
+        Model model = texturedmodel.getModel();
         GL30.glBindVertexArray(model.getVaoID());
 
         GL20.glEnableVertexAttribArray(0);
