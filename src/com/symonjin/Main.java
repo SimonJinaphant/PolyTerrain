@@ -3,15 +3,17 @@ package com.symonjin;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
 import com.symonjin.texture.ModelTexture;
+
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 
-public class Main {
+public class Main{
 
     private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback keyCallback;
@@ -53,7 +55,6 @@ public class Main {
         if (glfwInit() != GL11.GL_TRUE)
             throw new IllegalStateException("Something went wrong with initializing GLFW");
 
-
         //Construct the main window
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
@@ -64,7 +65,10 @@ public class Main {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
+        System.out.println("Creating window");
         windowID = glfwCreateWindow(600, 480, "PolyTerrain", NULL, NULL);
+        System.out.println("Created window");
+
 
         if ( windowID == NULL )
             throw new RuntimeException("Something went wrong with creating the main window");
@@ -93,11 +97,13 @@ public class Main {
         GLContext.createFromCurrent();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        triangle = loader.loadToVAO(vertices, indices);
+        float[] textureCoords = {0,0, 0,1, 1,1, 1,0};
+
+        triangle = loader.loadToVAO(vertices,textureCoords, indices);
         triangleShader = new StaticShader();
 
-        ModelTexture texture = new ModelTexture(loader.loadTexture("gravel"));
-        TexturedModel tmodel = new TexturedModel(triangle, null);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("res/gravel.png"));
+        TexturedModel tmodel = new TexturedModel(triangle, texture);
 
         while ( glfwWindowShouldClose(windowID) == GL_FALSE ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -123,10 +129,12 @@ public class Main {
 
         glfwDestroyWindow(windowID);
         glfwTerminate();
-
     }
 
-
+    static {
+        //TO PREVENT MAC OSX FROM FAILING
+        System.setProperty("java.awt.headless", "true");
+    }
     public static void main(String[] args) {
         new Main().run();
     }
