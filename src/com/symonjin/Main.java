@@ -1,5 +1,7 @@
 package com.symonjin;
 
+import com.symonjin.entities.Entity;
+import com.symonjin.math.Vector3f;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
 import com.symonjin.shaders.StaticShader;
@@ -66,7 +68,7 @@ public class Main{
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
 
-        windowID = glfwCreateWindow(600, 480, "PolyTerrain", NULL, NULL);
+        windowID = glfwCreateWindow(800, 680, "PolyTerrain", NULL, NULL);
         if ( windowID == NULL )
             throw new RuntimeException("Something went wrong with creating the main window");
 
@@ -99,12 +101,16 @@ public class Main{
 
         ModelTexture texture = new ModelTexture(loader.loadTexture("res/gravel.png"));
         TexturedModel tmodel = new TexturedModel(rectangle, texture);
+        Entity entity = new Entity(tmodel, new Vector3f(-1f,0,0),0,0,0,1);
 
         while ( glfwWindowShouldClose(windowID) == GL_FALSE ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            entity.increasePosition(0.002f,0,0);
+            //Rotation not working properly for x and y axis...
+            entity.increaseRotation(0,0,0.1f);
+            //entity.increaseScale(0.001f);
             rectangleShader.start();
-            renderer.render(tmodel);
+            renderer.render(entity, rectangleShader);
             rectangleShader.stop();
 
             //Important things to have in the rendering loop

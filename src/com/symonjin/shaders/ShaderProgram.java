@@ -1,11 +1,15 @@
 package com.symonjin.shaders;
 
+import com.symonjin.math.Matrix4f;
+import com.symonjin.math.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
 public abstract class ShaderProgram {
     private int programID;
@@ -24,6 +28,29 @@ public abstract class ShaderProgram {
 
         GL20.glLinkProgram(programID);
         GL20.glValidateProgram(programID);
+        getAllUniformLocation();
+    }
+
+    protected abstract void getAllUniformLocation();
+
+    protected int getUniformLocation(String uniformName){
+        return GL20.glGetUniformLocation(programID, uniformName);
+    }
+
+    protected void loadFloat(int location, float value){
+        GL20.glUniform1f(location, value);
+    }
+
+    protected void loadVector(int location, Vector3f vector){
+        GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    protected  void loadBoolean(int location, boolean value){
+        GL20.glUniform1f(location, (value == true) ? 1.0f : 0.0f);
+    }
+
+    protected void loadMatrix(int location, Matrix4f matrix){
+        GL20.glUniformMatrix4fv(location, false, matrix.getBuffer());
     }
 
     protected abstract void bindAttribute();
