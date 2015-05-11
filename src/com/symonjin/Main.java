@@ -2,11 +2,11 @@ package com.symonjin;
 
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
+import com.symonjin.shaders.StaticShader;
 import com.symonjin.texture.ModelTexture;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -28,16 +28,15 @@ public class Main{
     };
 
     int[] indices = {0,1,3,3,1,2};
+    float[] textureCoords = {0,0, 0,1, 1,1, 1,0};
 
     Loader loader = new Loader();
     RenderDaemon renderer = new RenderDaemon();
-    Model triangle;
-    StaticShader triangleShader;
+    Model rectangle;
+    StaticShader rectangleShader;
 
 
     public void run() {
-        System.out.println("LWJGL Initiated!");
-
         try {
             onStart();
             update();
@@ -55,6 +54,7 @@ public class Main{
         if (glfwInit() != GL11.GL_TRUE)
             throw new IllegalStateException("Something went wrong with initializing GLFW");
 
+
         //Construct the main window
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
@@ -65,11 +65,8 @@ public class Main{
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 
-        System.out.println("Creating window");
+
         windowID = glfwCreateWindow(600, 480, "PolyTerrain", NULL, NULL);
-        System.out.println("Created window");
-
-
         if ( windowID == NULL )
             throw new RuntimeException("Something went wrong with creating the main window");
 
@@ -97,20 +94,18 @@ public class Main{
         GLContext.createFromCurrent();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        float[] textureCoords = {0,0, 0,1, 1,1, 1,0};
-
-        triangle = loader.loadToVAO(vertices,textureCoords, indices);
-        triangleShader = new StaticShader();
+        rectangle = loader.loadToVAO(vertices, textureCoords, indices);
+        rectangleShader = new StaticShader();
 
         ModelTexture texture = new ModelTexture(loader.loadTexture("res/gravel.png"));
-        TexturedModel tmodel = new TexturedModel(triangle, texture);
+        TexturedModel tmodel = new TexturedModel(rectangle, texture);
 
         while ( glfwWindowShouldClose(windowID) == GL_FALSE ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            triangleShader.start();
+            rectangleShader.start();
             renderer.render(tmodel);
-            triangleShader.stop();
+            rectangleShader.stop();
 
             //Important things to have in the rendering loop
             glfwSwapBuffers(windowID);
@@ -121,7 +116,7 @@ public class Main{
 
 
     private void onStop(){
-        triangleShader.unloadShaders();
+        rectangleShader.unloadShaders();
         loader.unloadVAO();
 
         keyCallback.release();
@@ -132,9 +127,16 @@ public class Main{
     }
 
     static {
-        //TO PREVENT MAC OSX FROM FAILING
+        /*
+            Only on Mac OSX, LWJGL has to be executed with the JVM argument -XstartOnFirstThread
+            This consequently blocks Java's AWT and SWT threads from working properly,
+            thus making other libraries such as ImageIO hang without any error messages.
+
+            One trick to avoid this is to set -java.awt.headless to true inside a static block
+         */
         System.setProperty("java.awt.headless", "true");
     }
+
     public static void main(String[] args) {
         new Main().run();
     }

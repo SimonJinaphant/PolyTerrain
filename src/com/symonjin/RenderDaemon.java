@@ -2,18 +2,13 @@ package com.symonjin;
 
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-
 public class RenderDaemon {
-
-    public void prepare(){
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        GL11.glClearColor(0,0,1,0);
-    }
 
     public void render(TexturedModel texturedmodel) {
         Model model = texturedmodel.getModel();

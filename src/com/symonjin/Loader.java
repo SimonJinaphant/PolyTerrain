@@ -15,9 +15,15 @@ import java.util.ArrayList;
 
 public class Loader {
 
+    /*
+        We need to keep track of any OpenGL generated objects
+        because when the application closes, these objects must be
+        properly deleted with its corresponding glDelete function
+     */
     private ArrayList<Integer> vaoManager = new ArrayList<>(8);
     private ArrayList<Integer> vboManager = new ArrayList<>(8);
     private ArrayList<Integer> textureManager = new ArrayList<>(8);
+
 
     public Model loadToVAO(float[] position, float[] textureCoords, int[] indices){
         int vaoID = createVAO();

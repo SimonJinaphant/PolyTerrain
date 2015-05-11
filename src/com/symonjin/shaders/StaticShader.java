@@ -1,4 +1,4 @@
-package com.symonjin;
+package com.symonjin.shaders;
 
 
 public class StaticShader extends ShaderProgram{
@@ -7,8 +7,6 @@ public class StaticShader extends ShaderProgram{
 
     public StaticShader(){
         super(VERTEX_FILE, FRAGMENT_FILE);
-
-
     }
 
     @Override

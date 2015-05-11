@@ -1,4 +1,4 @@
-package com.symonjin;
+package com.symonjin.shaders;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -55,16 +55,14 @@ public abstract class ShaderProgram {
     private static int loadShader(String filepath, int type){
         StringBuilder shaderSource = new StringBuilder();
 
-        //Try with resource
         try(BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-
             String line;
 
             while ((line = reader.readLine()) != null){
                 shaderSource.append(line).append("\n");
             }
 
-        }catch (IOException error){
+        } catch (IOException error){
             System.out.println("Failed to read shader file: "+ filepath);
         }
 
