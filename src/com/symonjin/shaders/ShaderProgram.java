@@ -1,7 +1,7 @@
 package com.symonjin.shaders;
 
-import com.symonjin.math.Matrix4f;
-import com.symonjin.math.Vector3f;
+import com.symonjin.vector.Matrix4f;
+import com.symonjin.vector.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -15,6 +15,8 @@ public abstract class ShaderProgram {
     private int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
+
+    private FloatBuffer buffer = BufferUtils.createFloatBuffer(4*4);
 
     public ShaderProgram(String vertexFile, String fragmentFile){
         vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
@@ -46,11 +48,13 @@ public abstract class ShaderProgram {
     }
 
     protected  void loadBoolean(int location, boolean value){
-        GL20.glUniform1f(location, (value == true) ? 1.0f : 0.0f);
+        GL20.glUniform1f(location, (value) ? 1.0f : 0.0f);
     }
 
     protected void loadMatrix(int location, Matrix4f matrix){
-        GL20.glUniformMatrix4fv(location, false, matrix.getBuffer());
+        matrix.store(buffer);
+        buffer.flip();
+        GL20.glUniformMatrix4fv(location, false, buffer);
     }
 
     protected abstract void bindAttribute();

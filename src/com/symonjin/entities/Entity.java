@@ -1,6 +1,6 @@
 package com.symonjin.entities;
 
-import com.symonjin.math.Vector3f;
+import com.symonjin.vector.Vector3f;
 import com.symonjin.models.TexturedModel;
 
 /**
