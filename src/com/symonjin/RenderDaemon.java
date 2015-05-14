@@ -1,6 +1,5 @@
 package com.symonjin;
 
-import com.symonjin.vector.Matrix;
 import com.symonjin.vector.Matrix4f;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;

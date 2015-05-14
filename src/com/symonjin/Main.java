@@ -25,7 +25,7 @@ public class Main{
 
     private long windowID;
 
-    /*float[] vertices = {
+    float[] vertices = {
             -0.5f, 0.5f, 0f,
             -0.5f, -0.5f, 0f,
             0.5f, -0.5f, 0f,
@@ -33,8 +33,8 @@ public class Main{
     };
 
     int[] indices = {0,1,3,3,1,2};
-    float[] textureCoords = {0,0, 0,1, 1,1, 1,0};*/
-    float[] vertices = {
+    float[] textureCoords = {0,0, 0,1, 1,1, 1,0};
+    /*float[] vertices = {
             -0.5f,0.5f,-0.5f,
             -0.5f,-0.5f,-0.5f,
             0.5f,-0.5f,-0.5f,
@@ -89,7 +89,7 @@ public class Main{
             19,17,18,
             20,21,23,
             23,21,22
-    };
+    };*/
 
     Loader loader = new Loader();
     RenderDaemon renderer;
@@ -168,22 +168,25 @@ public class Main{
 
         ModelTexture texture = new ModelTexture(loader.loadTexture("res/gravel.png"));
         TexturedModel tmodel = new TexturedModel(rectangle, texture);
-        Entity entity = new Entity(tmodel, new Vector3f(0,0,-5),0,0,0,1);
+        Entity entity = new Entity(tmodel, new Vector3f(0,0,-2),0,0,0,1);
         glEnable(GL11.GL_DEPTH_TEST);
+
         while ( glfwWindowShouldClose(windowID) == GL_FALSE ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //entity.increasePosition(0, 0, -0.1f);
-            //entity.increaseRotation(0,0,1);
-            //entity.increaseScale(0.001f);
-            entity.increaseRotation(1,1,0);
+
+            //entity.increaseRotation(1,1,0);
             rectangleShader.start();
+
+            //Why load the matrix every loop?
             rectangleShader.loadViewMatrix(cam);
+
             renderer.render(entity, rectangleShader);
             rectangleShader.stop();
 
             //Important things to have in the rendering loop
             glfwSwapBuffers(windowID);
             glfwPollEvents();
+
         }
 
     }

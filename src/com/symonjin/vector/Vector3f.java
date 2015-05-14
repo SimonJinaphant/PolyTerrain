@@ -187,7 +187,8 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 * Negate a vector
 	 * @return this
 	 */
-	public Vector negate() {
+	public Vector3f negate() {
+		//System.out.println("in");
 		x = -x;
 		y = -y;
 		z = -z;
