@@ -1,19 +1,19 @@
 package com.symonjin.texture;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL11;
 
 public class TextureLoader {
     private static final int BYTES_PER_PIXEL = 4;
 
-    public static int loadTexture(String src){
+    public static int loadTexture(String src) {
         BufferedImage image = loadImage(src);
 
         int[] pixels = new int[image.getWidth() * image.getHeight()];
@@ -21,8 +21,8 @@ public class TextureLoader {
 
         ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL); //4 for RGBA, 3 for RGB
 
-        for(int y = 0; y < image.getHeight(); y++){
-            for(int x = 0; x < image.getWidth(); x++){
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
                 int pixel = pixels[y * image.getWidth() + x];
                 buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
                 buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
@@ -60,7 +60,7 @@ public class TextureLoader {
         try {
             return ImageIO.read(new File(src));
         } catch (IOException e) {
-            System.err.println("Failed to read the image: "+src);
+            System.err.println("Failed to read the image: " + src);
             e.printStackTrace();
         }
         return null;

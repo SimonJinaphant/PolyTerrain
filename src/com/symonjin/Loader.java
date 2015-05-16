@@ -20,12 +20,12 @@ public class Loader {
         because when the application closes, these objects must be
         properly deleted with its corresponding glDelete function
      */
-    private ArrayList<Integer> vaoManager = new ArrayList<>(8);
-    private ArrayList<Integer> vboManager = new ArrayList<>(8);
-    private ArrayList<Integer> textureManager = new ArrayList<>(8);
+    private ArrayList<Integer> vertexArrayHandlers = new ArrayList<>(8);
+    private ArrayList<Integer> bufferHandlers = new ArrayList<>(8);
+    private ArrayList<Integer> textureHandlers = new ArrayList<>(8);
 
 
-    public Model loadToVAO(float[] position, float[] textureCoords, int[] indices){
+    public Model loadToVAO(float[] position, int[] indices, float[] textureCoords) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeInAttrList(0, 3, position);
@@ -34,22 +34,22 @@ public class Loader {
         return new Model(vaoID, indices.length);
     }
 
-    public int loadTexture(String fileName){
+    public int loadTexture(String fileName) {
         int textureID = TextureLoader.loadTexture(fileName);
-        textureManager.add(textureID);
+        textureHandlers.add(textureID);
         return textureID;
     }
 
-    private int createVAO(){
+    private int createVAO() {
         int vaoID = GL30.glGenVertexArrays();
-        vaoManager.add(vaoID);
+        vertexArrayHandlers.add(vaoID);
         GL30.glBindVertexArray(vaoID);
         return vaoID;
     }
 
-    private void storeInAttrList(int attrNumber, int coordinateSize, float[] data){
+    private void storeInAttrList(int attrNumber, int coordinateSize, float[] data) {
         int vboID = GL15.glGenBuffers();
-        vboManager.add(vboID);
+        bufferHandlers.add(vboID);
 
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 
@@ -60,9 +60,9 @@ public class Loader {
 
     }
 
-    private void bindIndicesBuffer(int[] indices){
+    private void bindIndicesBuffer(int[] indices) {
         int vboId = GL15.glGenBuffers();
-        vboManager.add(vboId);
+        bufferHandlers.add(vboId);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboId);
         IntBuffer buffer = storeInIntBuffer(indices);
@@ -70,38 +70,38 @@ public class Loader {
 
     }
 
-    private FloatBuffer storeInFloatBuffer(float[] data){
+    private FloatBuffer storeInFloatBuffer(float[] data) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;
     }
 
-    private IntBuffer storeInIntBuffer(int data[]){
+    private IntBuffer storeInIntBuffer(int data[]) {
         IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;
     }
 
-    private void unbindVAO(){
+    private void unbindVAO() {
         GL30.glBindVertexArray(0);
     }
 
-    public void unloadVAO(){
-        for (int vao: vaoManager){
+    public void unloadVAO() {
+        for (int vao : vertexArrayHandlers) {
             GL30.glDeleteVertexArrays(vao);
         }
-        for (int vbo:vboManager){
+        for (int vbo : bufferHandlers) {
             GL15.glDeleteBuffers(vbo);
         }
-        for (int texture:textureManager){
+        for (int texture : textureHandlers) {
             GL11.glDeleteTextures(texture);
         }
 
-        vaoManager.clear();
-        vboManager.clear();
-        textureManager.clear();
+        vertexArrayHandlers.clear();
+        bufferHandlers.clear();
+        textureHandlers.clear();
     }
 
 }

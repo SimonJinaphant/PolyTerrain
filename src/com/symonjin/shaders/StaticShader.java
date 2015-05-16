@@ -1,11 +1,10 @@
 package com.symonjin.shaders;
 
-
-import com.symonjin.util.MathUtil;
-import com.symonjin.vector.Matrix;
-import com.symonjin.vector.Matrix4f;
 import com.symonjin.Camera;
-public class StaticShader extends ShaderProgram{
+import com.symonjin.util.MathUtil;
+import com.symonjin.vector.Matrix4f;
+
+public class StaticShader extends ShaderProgram {
     private static final String VERTEX_FILE = "src/com/symonjin/shaders/vertexShader.txt";
     private static final String FRAGMENT_FILE = "src/com/symonjin/shaders/fragmentShader.txt";
 
@@ -13,7 +12,7 @@ public class StaticShader extends ShaderProgram{
     private int location_projectionMatrix;
     private int location_viewMatrix;
 
-    public StaticShader(){
+    public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
 
@@ -24,22 +23,22 @@ public class StaticShader extends ShaderProgram{
     }
 
     @Override
-    protected void getAllUniformLocation(){
+    protected void getAllUniformLocation() {
         location_transformMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
     }
 
-    public void loadTransformMatrix(Matrix4f matrix){
+    public void loadTransformMatrix(Matrix4f matrix) {
         super.loadMatrix(location_transformMatrix, matrix);
     }
 
-    public void loadViewMatrix(Camera camera){
-        Matrix4f view = MathUtil.createViewMatrix(camera);
-        super.loadMatrix(location_viewMatrix, view);
+    public void loadProjectionMatrix(Matrix4f matrix) {
+        super.loadMatrix(location_projectionMatrix, matrix);
     }
 
-    public void loadProjectionMatrix(Matrix4f matrix){
-        super.loadMatrix(location_projectionMatrix, matrix);
+    public void loadViewMatrix(Camera camera) {
+        Matrix4f view = MathUtil.createViewMatrix(camera);
+        super.loadMatrix(location_viewMatrix, view);
     }
 }

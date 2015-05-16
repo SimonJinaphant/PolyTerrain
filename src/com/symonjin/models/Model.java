@@ -15,7 +15,7 @@ public class Model {
         return vaoID;
     }
 
-    public int getVertexCount(){
+    public int getVertexCount() {
         return vertexCount;
     }
 

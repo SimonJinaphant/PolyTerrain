@@ -1,7 +1,7 @@
 package com.symonjin.entities;
 
-import com.symonjin.vector.Vector3f;
 import com.symonjin.models.TexturedModel;
+import com.symonjin.vector.Vector3f;
 
 /**
  * Created by Simon on 2015-05-10.
@@ -21,18 +21,19 @@ public class Entity {
         this.scale = scale;
     }
 
-    public void increasePosition(float dx, float dy, float dz){
+    public void increasePosition(float dx, float dy, float dz) {
         this.position.x += dx;
         this.position.y += dy;
         this.position.z += dz;
     }
 
-    public void increaseRotation(float dx, float dy, float dz){
+    public void increaseRotation(float dx, float dy, float dz) {
         this.rotx += dx;
         this.roty += dy;
         this.rotz += dz;
     }
-    public void increaseScale(float scale){
+
+    public void increaseScale(float scale) {
         this.scale += scale;
     }
 
