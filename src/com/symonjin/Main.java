@@ -102,24 +102,25 @@ public class Main {
     private void update() {
         //Link openGL to current thread
         GLContext.createFromCurrent();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
         glEnable(GL11.GL_DEPTH_TEST);
 
-        geometricObject = loader.loadToVAO(
-                Square.vertices, Square.indices, Square.textureCoords);
+        //geometricObject = loader.loadToVAO(Square.vertices, Square.indices, Square.textureCoords);
+        Model model = OBJLoader.loadObjModel("dragon", loader);
         shader = new StaticShader();
         renderer = new Renderer(shader);
 
-        ModelTexture texture = new ModelTexture(loader.loadTexture("res/gravel.png"));
-        TexturedModel tmodel = new TexturedModel(geometricObject, texture);
-        Entity entity = new Entity(tmodel, new Vector3f(0, 0, -2), 0, 0, 0, 1);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("res/white.png"));
+        TexturedModel tmodel = new TexturedModel(model, texture);
+        Entity entity = new Entity(tmodel, new Vector3f(0, 0, -25), 0, 0, 0, 1);
+        Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
 
         while (glfwWindowShouldClose(windowHandler) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            entity.increaseRotation(1, 1, 0);
+            entity.increaseRotation(0, 1, 0);
             shader.start();
-
+            shader.loadLight(light);
             //TODO: Optimization: Why load the matrix every loop?
             shader.loadViewMatrix(cam);
 

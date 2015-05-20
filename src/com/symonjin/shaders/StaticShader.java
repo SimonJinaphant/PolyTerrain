@@ -1,6 +1,7 @@
 package com.symonjin.shaders;
 
 import com.symonjin.Camera;
+import com.symonjin.Light;
 import com.symonjin.util.MathUtil;
 import com.symonjin.vector.Matrix4f;
 
@@ -12,6 +13,9 @@ public class StaticShader extends ShaderProgram {
     private int location_projectionMatrix;
     private int location_viewMatrix;
 
+    private int location_lightPosition;
+    private int location_lightColor;
+
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
@@ -20,6 +24,7 @@ public class StaticShader extends ShaderProgram {
     protected void bindAttribute() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
+        super.bindAttribute(2, "normal");
     }
 
     @Override
@@ -27,6 +32,13 @@ public class StaticShader extends ShaderProgram {
         location_transformMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
+        location_lightPosition = super.getUniformLocation("lightPosition");
+        location_lightColor = super.getUniformLocation("lightColor");
+    }
+
+    public void loadLight(Light light){
+        super.loadVector(location_lightPosition, light.getPosition());
+        super.loadVector(location_lightColor, light.getColor());
     }
 
     public void loadTransformMatrix(Matrix4f matrix) {

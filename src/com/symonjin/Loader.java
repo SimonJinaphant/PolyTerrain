@@ -25,11 +25,12 @@ public class Loader {
     private ArrayList<Integer> textureHandlers = new ArrayList<>(8);
 
 
-    public Model loadToVAO(float[] position, int[] indices, float[] textureCoords) {
+    public Model loadToVAO(float[] position, int[] indices, float[] textureCoords, float[] normals) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeInAttrList(0, 3, position);
         storeInAttrList(1, 2, textureCoords);
+        storeInAttrList(2, 3, normals);
         unbindVAO();
         return new Model(vaoID, indices.length);
     }
