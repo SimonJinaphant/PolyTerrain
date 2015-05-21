@@ -12,7 +12,7 @@ public class Camera {
     public void move(int action) {
         switch (action) {
             case 0:
-                position.z -= 0.02f;
+                position.z -= 0.52f;
                 break;
             case 1:
                 position.x += 0.02f;

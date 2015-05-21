@@ -1,10 +1,9 @@
 package com.symonjin;
 
 import com.symonjin.entities.Entity;
-import com.symonjin.geometricObjects.Square;
+import com.symonjin.geometricObjects.Cube;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
-import com.symonjin.shaders.StaticShader;
 import com.symonjin.texture.ModelTexture;
 import com.symonjin.vector.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -28,9 +27,7 @@ public class Main {
     private long windowHandler;
 
     Loader loader = new Loader();
-    Renderer renderer;
-    Model geometricObject;
-    StaticShader shader;
+    MasterRenderer renderer;
     Camera cam = new Camera();
 
     public void run() {
@@ -102,42 +99,34 @@ public class Main {
     private void update() {
         //Link openGL to current thread
         GLContext.createFromCurrent();
-        glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
-        glEnable(GL11.GL_DEPTH_TEST);
 
-        //geometricObject = loader.loadToVAO(Square.vertices, Square.indices, Square.textureCoords);
+
         Model model = OBJLoader.loadObjModel("dragon", loader);
-        shader = new StaticShader();
-        renderer = new Renderer(shader);
+        TexturedModel tmodel = new TexturedModel(model,
+                new ModelTexture(loader.loadTexture("res/white.png")));
 
-        ModelTexture texture = new ModelTexture(loader.loadTexture("res/white.png"));
-        TexturedModel tmodel = new TexturedModel(model, texture);
-        Entity entity = new Entity(tmodel, new Vector3f(0, 0, -25), 0, 0, 0, 1);
-        Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+        tmodel.getModelTexture().setReflectivity(10);
+        tmodel.getModelTexture().setShineDamper(1);
+
+        Entity entity = new Entity(tmodel, new Vector3f(0, -1, -20), 0, 0, 0, 1);
+        Light light = new Light(new Vector3f(0,5,-15), new Vector3f(0.5f,0.5f,0.5f));
+
+        renderer = new MasterRenderer();
 
         while (glfwWindowShouldClose(windowHandler) == GL_FALSE) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            entity.increaseRotation(0, 1, 0);
-            shader.start();
-            shader.loadLight(light);
-            //TODO: Optimization: Why load the matrix every loop?
-            shader.loadViewMatrix(cam);
-
-            renderer.render(entity, shader);
-            shader.stop();
+            entity.increaseRotation(0,1,0);
+            renderer.processEntity(entity);
+            renderer.render(light, cam);
 
             //Important things to have in the rendering loop
             glfwSwapBuffers(windowHandler);
             glfwPollEvents();
-
         }
-
     }
 
 
     private void onStop() {
-        shader.unloadShaders();
+        renderer.unload();
         loader.unloadVAO();
 
         keyCallback.release();
