@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Created by Simon on 2015-05-20.
- */
+
 public class OBJLoader {
 
     public static Model loadObjModel(String src, Loader loader) {
@@ -62,7 +60,6 @@ public class OBJLoader {
             while (sc.hasNext()) {
                 if (!line.startsWith("f ")) {
                     line = sc.nextLine();
-                    System.out.println("Skipping");
                     continue;
                 }
                 String[] currentLine = line.split(" ");
@@ -89,10 +86,11 @@ public class OBJLoader {
             verticesArray[vertexPointer++] = vertex.y;
             verticesArray[vertexPointer++] = vertex.z;
         }
+
         for (int i = 0; i < indices.size(); i++) {
             indicesArray[i] = indices.get(i);
         }
-        System.out.println("Finished Loading obj");
+        System.out.println("Finished loading obj file");
         return loader.loadToVAO(verticesArray, indicesArray, textureArray, normalArray);
     }
 

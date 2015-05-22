@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class Renderer {
     public void prepare(){
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(0f, 0f, 0f, 1f);
+        GL11.glClearColor(0.133f, 0.133f, 0.133f, 1f);
     }
 
     public void render(Map<TexturedModel, List<Entity>> entities){

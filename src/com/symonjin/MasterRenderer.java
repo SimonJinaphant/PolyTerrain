@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by Simon on 2015-05-20.
- */
 public class MasterRenderer {
 
     private StaticShader shader = new StaticShader();

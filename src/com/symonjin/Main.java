@@ -1,7 +1,6 @@
 package com.symonjin;
 
 import com.symonjin.entities.Entity;
-import com.symonjin.geometricObjects.Cube;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
 import com.symonjin.texture.ModelTexture;
@@ -25,6 +24,7 @@ public class Main {
     private GLFWKeyCallback keyCallback;
 
     private long windowHandler;
+    public static boolean isMacOSX = false;
 
     Loader loader = new Loader();
     MasterRenderer renderer;
@@ -52,11 +52,15 @@ public class Main {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-        //Some important things for openGL to work properly...
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+
+        //Some important things for openGL to work properly on OSX
+        if(isMacOSX){
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        }
+
 
 
         windowHandler = glfwCreateWindow(WIDTH, HEIGHT, "PolyTerrain", NULL, NULL);
@@ -100,21 +104,20 @@ public class Main {
         //Link openGL to current thread
         GLContext.createFromCurrent();
 
-
         Model model = OBJLoader.loadObjModel("dragon", loader);
         TexturedModel tmodel = new TexturedModel(model,
                 new ModelTexture(loader.loadTexture("res/white.png")));
 
-        tmodel.getModelTexture().setReflectivity(10);
+        tmodel.getModelTexture().setReflectivity(2);
         tmodel.getModelTexture().setShineDamper(1);
 
-        Entity entity = new Entity(tmodel, new Vector3f(0, -1, -20), 0, 0, 0, 1);
-        Light light = new Light(new Vector3f(0,5,-15), new Vector3f(0.5f,0.5f,0.5f));
+        Entity entity = new Entity(tmodel, new Vector3f(0, -5, -20), 0, 0, 0, 1);
+        Light light = new Light(new Vector3f(0,5,-5), new Vector3f(0.8f,0.5f,0.2f));
 
         renderer = new MasterRenderer();
 
         while (glfwWindowShouldClose(windowHandler) == GL_FALSE) {
-            entity.increaseRotation(0,1,0);
+            entity.increaseRotation(0,0.5f,0);
             renderer.processEntity(entity);
             renderer.render(light, cam);
 
@@ -148,13 +151,18 @@ public class Main {
 
     static {
         /*
-            Only on Mac OSX, LWJGL has to be executed with the JVM argument -XstartOnFirstThread
+            On Mac OSX: LWJGL has to be executed with the JVM argument -XstartOnFirstThread
             This consequently blocks Java's AWT and SWT threads from working properly,
-            thus making other libraries such as ImageIO hang without any error messages.
+            making other libraries such as ImageIO hang without any error messages.
 
-            One trick to avoid this is to set -java.awt.headless to true inside a static block
+            One trick to avoid this is to set -java.awt.headless to true
          */
-        System.setProperty("java.awt.headless", "true");
+        String operatingSystem = System.getProperty("os.name");
+        if(operatingSystem.startsWith("Mac")){
+            isMacOSX = true;
+            System.setProperty("java.awt.headless", "true");
+        }
+
     }
 
     public static void main(String[] args) {
