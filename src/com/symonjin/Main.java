@@ -41,8 +41,6 @@ public class Main {
     }
 
     private void onStart() {
-        //Setup GLFW's custom stack-tracing system
-        //---REMEMBER TO RELEASE THE CALLBACK WHEN CLOSING THE PROGRAM!---
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
         if (glfwInit() != GL11.GL_TRUE)
@@ -53,7 +51,7 @@ public class Main {
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-        //Some important things for openGL to work properly on OSX
+        //Some important things for OpenGL to work properly on OSX
         if(isMacOSX){
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -62,14 +60,12 @@ public class Main {
         }
 
 
-
         windowHandler = glfwCreateWindow(WIDTH, HEIGHT, "PolyTerrain", NULL, NULL);
         if (windowHandler == NULL)
             throw new RuntimeException("Something went wrong when creating the main window");
 
 
-        //Add ESC key callback to close window
-        //---REMEMBER TO RELEASE THE CALLBACK WHEN CLOSING THE PROGRAM!---
+        //TODO: Implement proper keyboard interaction for the camera
         glfwSetKeyCallback(windowHandler, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
