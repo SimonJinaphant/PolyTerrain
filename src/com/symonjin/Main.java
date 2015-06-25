@@ -3,6 +3,7 @@ package com.symonjin;
 import com.symonjin.entities.Entity;
 import com.symonjin.models.Model;
 import com.symonjin.models.TexturedModel;
+import com.symonjin.terrain.Terrain;
 import com.symonjin.texture.ModelTexture;
 import com.symonjin.vector.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -73,17 +74,7 @@ public class Main {
                     glfwSetWindowShouldClose(window, GL_TRUE);
 
                 else if (action == GLFW_REPEAT) {
-                    switch (key) {
-                        case GLFW_KEY_W:
-                            cam.move(0);
-                            break;
-                        case GLFW_KEY_D:
-                            cam.move(1);
-                            break;
-                        case GLFW_KEY_A:
-                            cam.move(2);
-                            break;
-                    }
+                    cam.move(key);
                 }
             }
         });
@@ -100,20 +91,27 @@ public class Main {
         //Link openGL to current thread
         GLContext.createFromCurrent();
 
-        Model model = OBJLoader.loadObjModel("dragon", loader);
+        Model model = OBJLoader.loadObjModel("stall", loader);
         TexturedModel tmodel = new TexturedModel(model,
-                new ModelTexture(loader.loadTexture("res/white.png")));
+                new ModelTexture(loader.loadTexture("res/stallTexture.png")));
 
         tmodel.getModelTexture().setReflectivity(2);
         tmodel.getModelTexture().setShineDamper(1);
 
-        Entity entity = new Entity(tmodel, new Vector3f(0, -5, -20), 0, 0, 0, 1);
-        Light light = new Light(new Vector3f(0,5,-5), new Vector3f(0.8f,0.5f,0.2f));
+        Entity entity = new Entity(tmodel, new Vector3f(0, 0, -20), 0, 0, 0, 1);
+        Light light = new Light(new Vector3f(0,50,0), new Vector3f(0.8f,0.5f,0.2f));
 
         renderer = new MasterRenderer();
-        
+
+        Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("res/paving.png")));
+        Terrain terrain2 = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("res/gravel.png")));
+
+
         while (glfwWindowShouldClose(windowHandler) == GL_FALSE) {
             entity.increaseRotation(0,0.5f,0);
+
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
             renderer.processEntity(entity);
             //TODO: Separate light and camera rendering
             renderer.render(light, cam);

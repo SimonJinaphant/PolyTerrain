@@ -5,9 +5,10 @@ import com.symonjin.Light;
 import com.symonjin.util.MathUtil;
 import com.symonjin.vector.Matrix4f;
 
-public class StaticShader extends ShaderProgram {
-    private static final String VERTEX_FILE = "src/com/symonjin/shaders/entity.vs";
-    private static final String FRAGMENT_FILE = "src/com/symonjin/shaders/entity.fs";
+public class TerrainShader extends ShaderProgram {
+
+    private static final String VERTEX_FILE = "src/com/symonjin/shaders/terrain.vs";
+    private static final String FRAGMENT_FILE = "src/com/symonjin/shaders/terrain.fs";
 
     private int location_transformMatrix;
     private int location_projectionMatrix;
@@ -19,7 +20,7 @@ public class StaticShader extends ShaderProgram {
     private int location_shineDamper;
     private int location_reflectitity;
 
-    public StaticShader() {
+    public TerrainShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
 
