@@ -111,10 +111,11 @@ public class Main {
         Light light = new Light(new Vector3f(0,5,-5), new Vector3f(0.8f,0.5f,0.2f));
 
         renderer = new MasterRenderer();
-
+        
         while (glfwWindowShouldClose(windowHandler) == GL_FALSE) {
             entity.increaseRotation(0,0.5f,0);
             renderer.processEntity(entity);
+            //TODO: Separate light and camera rendering
             renderer.render(light, cam);
 
             //Important things to have in the rendering loop
